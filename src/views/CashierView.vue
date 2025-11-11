@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 md:p-6 bg-gray-50 min-h-screen">
     <!-- Title -->
-    <h1 class="text-2xl md:text-3xl font-bold mb-6 text-blue-700 flex items-center gap-2">
+    <h1 class="text-2xl md:text-3xl font-bold mb-6 text-blue-700 flex items-center gap-2 justify-center md:justify-start">
       <span class="material-icons text-blue-600">point_of_sale</span>
       Cashier
     </h1>
@@ -13,21 +13,21 @@
         placeholder="🔍 Search product..."
         class="border border-gray-300 p-2 rounded-lg w-full md:w-1/3 focus:outline-blue-400"
       />
-      <p class="text-gray-500 text-sm md:text-base">
+      <p class="text-gray-500 text-sm md:text-base text-center md:text-left">
         Showing {{ paginatedProducts.length }} of {{ filteredProducts.length }} products
       </p>
     </div>
 
-    <!-- Products Table -->
-    <div class="bg-white rounded-lg shadow border overflow-x-auto">
-      <table class="w-full min-w-[600px] border-collapse">
+    <!-- Products Table (Desktop) -->
+    <div class="hidden md:block bg-white rounded-lg shadow border overflow-x-auto">
+      <table class="w-full border-collapse">
         <thead class="bg-blue-100 text-left">
           <tr>
-            <th class="p-2 md:p-3 font-semibold text-gray-700">Product</th>
-            <th class="p-2 md:p-3 font-semibold text-gray-700">Price</th>
-            <th class="p-2 md:p-3 font-semibold text-gray-700">Stock</th>
-            <th class="p-2 md:p-3 font-semibold text-gray-700 text-center">Amount</th>
-            <th class="p-2 md:p-3 font-semibold text-gray-700 text-center">Action</th>
+            <th class="p-3 font-semibold text-gray-700">Product</th>
+            <th class="p-3 font-semibold text-gray-700">Price</th>
+            <th class="p-3 font-semibold text-gray-700">Stock</th>
+            <th class="p-3 font-semibold text-gray-700 text-center">Amount</th>
+            <th class="p-3 font-semibold text-gray-700 text-center">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -36,13 +36,13 @@
             :key="product.id"
             class="hover:bg-gray-50 transition border-t"
           >
-            <td class="p-2 md:p-3 font-medium text-gray-800">{{ product.name }}</td>
-            <td class="p-2 md:p-3 text-green-600 font-semibold">
+            <td class="p-3 font-medium text-gray-800">{{ product.name }}</td>
+            <td class="p-3 text-green-600 font-semibold">
               Rp {{ product.price.toLocaleString('id-ID') }}
             </td>
-            <td class="p-2 md:p-3">
+            <td class="p-3">
               <span
-                class="px-2 md:px-3 py-1 rounded-full text-sm font-medium"
+                class="px-3 py-1 rounded-full text-sm font-medium"
                 :class="{
                   'bg-green-100 text-green-700': product.stock > 10,
                   'bg-yellow-100 text-yellow-700': product.stock <= 10 && product.stock > 0,
@@ -52,7 +52,7 @@
                 {{ product.stock }}
               </span>
             </td>
-            <td class="p-2 md:p-3 text-center">
+            <td class="p-3 text-center">
               <input
                 v-model.number="amounts[product.id]"
                 type="number"
@@ -61,27 +61,60 @@
                 class="w-16 border rounded p-1 text-center"
               />
             </td>
-            <td class="p-2 md:p-3 text-center">
+            <td class="p-3 text-center">
               <button
                 @click="addToCart(product)"
-                class="bg-blue-600 hover:bg-blue-700 text-white px-3 md:px-4 py-1.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="product.stock === 0"
               >
                 Add
               </button>
             </td>
           </tr>
-          <tr v-if="paginatedProducts.length === 0">
-            <td colspan="5" class="text-center p-6 text-gray-500">
-              No products found
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Products Cards (Mobile) -->
+    <div class="md:hidden flex flex-col gap-4">
+      <div
+        v-for="product in paginatedProducts"
+        :key="product.id"
+        class="bg-white rounded-lg shadow p-4 flex flex-col items-center text-center"
+      >
+        <h3 class="font-semibold text-gray-800 text-lg mb-2">{{ product.name }}</h3>
+        <p class="text-green-600 font-semibold mb-1">Rp {{ product.price.toLocaleString('id-ID') }}</p>
+        <span
+          class="px-3 py-1 rounded-full text-sm font-medium mb-2"
+          :class="{
+            'bg-green-100 text-green-700': product.stock > 10,
+            'bg-yellow-100 text-yellow-700': product.stock <= 10 && product.stock > 0,
+            'bg-red-100 text-red-700': product.stock === 0
+          }"
+        >
+          Stock: {{ product.stock }}
+        </span>
+        <div class="flex items-center gap-2">
+          <input
+            v-model.number="amounts[product.id]"
+            type="number"
+            min="1"
+            :max="product.stock"
+            class="w-16 border rounded p-1 text-center"
+          />
+          <button
+            @click="addToCart(product)"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            :disabled="product.stock === 0"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Pagination -->
-    <div class="flex flex-col md:flex-row justify-center items-center mt-4 gap-2 md:gap-4">
+    <div class="flex flex-col md:flex-row justify-center items-center mt-6 gap-2 md:gap-4">
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
@@ -103,7 +136,7 @@
 
     <!-- Cart Section -->
     <div class="mt-8 md:mt-10 bg-white shadow rounded-lg p-4 md:p-6 border">
-      <h2 class="text-xl md:text-2xl font-semibold mb-4 text-blue-700 flex items-center gap-2">
+      <h2 class="text-xl md:text-2xl font-semibold mb-4 text-blue-700 flex items-center gap-2 justify-center md:justify-start">
         <span class="material-icons text-blue-600">shopping_cart</span>
         Cart
       </h2>
