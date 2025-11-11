@@ -1,71 +1,159 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-semibold mb-4">Cashier</h1>
+  <div class="p-6 bg-gray-50 min-h-screen">
+    <!-- Title -->
+    <h1 class="text-2xl font-bold mb-6 text-blue-700 flex items-center gap-2">
+      <span class="material-icons text-blue-600">point_of_sale</span>
+      Cashier
+    </h1>
 
-    <!-- Search -->
-    <input
-      v-model="search"
-      placeholder="Search product..."
-      class="border p-2 w-full rounded mb-4"
-    />
+    <!-- Search + Info -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+      <input
+        v-model="search"
+        placeholder="🔍 Search product..."
+        class="border border-gray-300 p-2 rounded-lg w-full md:w-1/3 focus:outline-blue-400"
+      />
+      <p class="text-gray-500 text-sm md:text-base">
+        Showing {{ paginatedProducts.length }} of {{ filteredProducts.length }} products
+      </p>
+    </div>
 
     <!-- Products Table -->
-    <table class="w-full border-collapse border mb-6">
-      <thead class="bg-blue-50">
-        <tr>
-          <th class="p-3 border">Product</th>
-          <th class="p-3 border">Price</th>
-          <th class="p-3 border">Stock</th>
-          <th class="p-3 border">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="product in filteredProducts"
-          :key="product.id"
-          class="hover:bg-gray-50"
-        >
-          <td class="p-3 border">{{ product.name }}</td>
-          <td class="p-3 border">
-            Rp {{ product.price.toLocaleString('id-ID') }}
-          </td>
-          <td class="p-3 border">{{ product.stock }}</td>
-          <td class="p-3 border text-center">
-            <button
-              @click="addToCart(product)"
-              class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
-              :disabled="product.stock === 0"
-            >
-              Add
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="bg-white rounded-lg shadow border overflow-hidden">
+      <table class="w-full border-collapse">
+        <thead class="bg-blue-100 text-left">
+          <tr>
+            <th class="p-3 font-semibold text-gray-700">Product</th>
+            <th class="p-3 font-semibold text-gray-700">Price</th>
+            <th class="p-3 font-semibold text-gray-700">Stock</th>
+            <th class="p-3 font-semibold text-gray-700 text-center">Amount</th>
+            <th class="p-3 font-semibold text-gray-700 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="product in paginatedProducts"
+            :key="product.id"
+            class="hover:bg-gray-50 transition border-t"
+          >
+            <td class="p-3 font-medium text-gray-800">{{ product.name }}</td>
+            <td class="p-3 text-green-600 font-semibold">
+              Rp {{ product.price.toLocaleString('id-ID') }}
+            </td>
+            <td class="p-3">
+              <span
+                class="px-3 py-1 rounded-full text-sm font-medium"
+                :class="{
+                  'bg-green-100 text-green-700': product.stock > 10,
+                  'bg-yellow-100 text-yellow-700': product.stock <= 10 && product.stock > 0,
+                  'bg-red-100 text-red-700': product.stock === 0
+                }"
+              >
+                {{ product.stock }}
+              </span>
+            </td>
+            <td class="p-3 text-center">
+              <input
+                v-model.number="amounts[product.id]"
+                type="number"
+                min="1"
+                :max="product.stock"
+                class="w-16 border rounded p-1 text-center"
+              />
+            </td>
+            <td class="p-3 text-center">
+              <button
+                @click="addToCart(product)"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="product.stock === 0"
+              >
+                Add
+              </button>
+            </td>
+          </tr>
+          <tr v-if="paginatedProducts.length === 0">
+            <td colspan="5" class="text-center p-6 text-gray-500">
+              No products found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center mt-6 gap-2">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      >
+        Prev
+      </button>
+      <span class="text-gray-700 font-medium">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
 
     <!-- Cart Section -->
-    <h2 class="text-xl font-semibold mb-2">Cart</h2>
-    <div v-if="cart.length === 0" class="text-gray-500">No items yet</div>
+    <div class="mt-10 bg-white shadow rounded-lg p-6 border">
+      <h2 class="text-xl font-semibold mb-4 text-blue-700 flex items-center gap-2">
+        <span class="material-icons text-blue-600">shopping_cart</span>
+        Cart
+      </h2>
 
-    <ul v-else class="mb-4">
-      <li
-        v-for="item in cart"
-        :key="item.name"
-        class="flex justify-between items-center border-b py-2"
-      >
-        <span>{{ item.name }} (x{{ item.quantity }})</span>
-        <span>Rp {{ (item.price * item.quantity).toLocaleString('id-ID') }}</span>
-      </li>
-    </ul>
+      <div v-if="cart.length === 0" class="text-gray-500 text-center py-6">
+        No items yet
+      </div>
 
-    <div v-if="cart.length > 0" class="flex justify-between items-center mt-4">
-      <p class="text-lg font-bold">Total: Rp {{ total.toLocaleString('id-ID') }}</p>
-      <button
-        @click="checkout"
-        class="bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700"
-      >
-        Checkout
-      </button>
+      <ul v-else class="divide-y divide-gray-200">
+        <li
+          v-for="item in cart"
+          :key="item.name"
+          class="flex justify-between items-center py-3"
+        >
+          <span>{{ item.name }} (x{{ item.quantity }})</span>
+          <span class="text-green-700 font-semibold">
+            Rp {{ (item.price * item.quantity).toLocaleString('id-ID') }}
+          </span>
+        </li>
+      </ul>
+
+      <div v-if="cart.length > 0" class="flex justify-between items-center mt-6 pt-4 border-t">
+        <p class="text-lg font-bold text-gray-800">
+          Total: Rp {{ total.toLocaleString('id-ID') }}
+        </p>
+        <button
+          @click="checkout"
+          class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition"
+        >
+          Checkout
+        </button>
+      </div>
+    </div>
+
+    <!-- ✅ Success Modal -->
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm text-center">
+        <span class="material-icons text-green-500 text-5xl mb-3">check_circle</span>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Transaction Successful!</h3>
+        <p class="text-gray-600 mb-6">Your transaction has been recorded successfully.</p>
+        <button
+          @click="closeModal"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+        >
+          OK
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -84,23 +172,23 @@ import {
   getDocs
 } from 'firebase/firestore'
 
-// Product type
 interface Product {
-  id?: string
+  id: string
   name: string
   price: number
   stock: number
 }
 
-// State
 const search = ref('')
 const products = ref<Product[]>([])
 const cart = ref<{ name: string; price: number; quantity: number }[]>([])
+const amounts = ref<Record<string, number>>({}) // holds product amount per ID
+const showModal = ref(false)
 
 const productsCollection = collection(db, 'products')
 const transactionsCollection = collection(db, 'transactions')
 
-// ✅ Realtime listener
+// Realtime listener
 let unsubscribe: (() => void) | null = null
 onMounted(() => {
   unsubscribe = onSnapshot(productsCollection, (snapshot) => {
@@ -110,32 +198,50 @@ onMounted(() => {
     })) as Product[]
   })
 })
+onUnmounted(() => unsubscribe && unsubscribe())
 
-// cleanup listener when leaving page
-onUnmounted(() => {
-  if (unsubscribe) unsubscribe()
-})
-
-// Search filter
+// Search
 const filteredProducts = computed(() =>
   products.value.filter(p =>
     p.name.toLowerCase().includes(search.value.toLowerCase())
   )
 )
 
-// Add product to cart
-function addToCart(product: Product) {
-  const existing = cart.value.find(i => i.name === product.name)
-  if (existing) existing.quantity++
-  else cart.value.push({ name: product.name, price: product.price, quantity: 1 })
+// Pagination
+const currentPage = ref(1)
+const itemsPerPage = 5
+
+const totalPages = computed(() =>
+  Math.ceil(filteredProducts.value.length / itemsPerPage)
+)
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  return filteredProducts.value.slice(start, start + itemsPerPage)
+})
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) currentPage.value++
+}
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--
 }
 
-// Calculate total
+// Add to cart
+function addToCart(product: Product) {
+  const quantity = amounts.value[product.id!] || 1
+  const existing = cart.value.find(i => i.name === product.name)
+  if (existing) existing.quantity += quantity
+  else cart.value.push({ name: product.name, price: product.price, quantity })
+  amounts.value[product.id!] = 1
+}
+
+// Total
 const total = computed(() =>
   cart.value.reduce((sum, i) => sum + i.price * i.quantity, 0)
 )
 
-// Checkout function
+// Checkout
 async function checkout() {
   for (const item of cart.value) {
     const productQuery = query(productsCollection, where('name', '==', item.name))
@@ -150,9 +256,15 @@ async function checkout() {
   await addDoc(transactionsCollection, {
     items: cart.value,
     total: total.value,
-    date: new Date().toISOString(),
+    date: new Date().toISOString()
   })
 
   cart.value = []
+  showModal.value = true
+}
+
+// Close Modal
+function closeModal() {
+  showModal.value = false
 }
 </script>

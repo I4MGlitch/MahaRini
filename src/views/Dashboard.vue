@@ -1,7 +1,10 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-6">Dashboard Overview</h2>
+    <h1 class="text-2xl font-bold mb-6 text-blue-700 flex items-center gap-2">
+      <span class="material-icons text-blue-600">dashboard</span>
+      Overview
+    </h1>
 
     <div class="grid md:grid-cols-4 gap-6">
       <!-- Total Products -->
@@ -14,7 +17,9 @@
       <!-- Total Stock Value -->
       <div class="bg-white dark:bg-gray-900 shadow rounded-xl p-5 flex flex-col items-start">
         <p class="text-gray-500">Total Stock Value</p>
-        <h3 class="text-3xl font-bold text-green-600">${{ totalValue.toLocaleString() }}</h3>
+        <h3 class="text-3xl font-bold text-green-600">
+          {{ totalValue.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' }) }}
+        </h3>
         <p class="text-sm text-gray-400 mt-1">Sum of (price × stock)</p>
       </div>
 

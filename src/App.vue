@@ -1,11 +1,9 @@
 <template>
-  <div class="flex h-screen bg-gray-100">
-    <Sidebar :isOpen="sidebarOpen" />
-
+  <div class="flex h-screen overflow-hidden">
+    <Sidebar :isOpen="isSidebarOpen" @toggleSidebar="toggleSidebar" />
     <div class="flex-1 flex flex-col">
-      <Navbar @toggleSidebar="sidebarOpen = !sidebarOpen" />
-
-      <main class="flex-1 p-6 overflow-y-auto">
+      <Navbar @toggleSidebar="toggleSidebar" />
+      <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <router-view />
       </main>
     </div>
@@ -14,9 +12,9 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import Navbar from './components/Navbar.vue'
-import Sidebar from './components/Sidebar.vue'
+import Navbar from '@/components/Navbar.vue'
+import Sidebar from '@/components/Sidebar.vue'
 
-const sidebarOpen = ref(false)
-
+const isSidebarOpen = ref(false)
+const toggleSidebar = () => (isSidebarOpen.value = !isSidebarOpen.value)
 </script>

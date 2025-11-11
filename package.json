@@ -20,6 +20,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@mdi/js": "^7.4.47",
     "chart.js": "^4.5.1",
     "dexie": "^4.2.1",
     "firebase": "^12.5.0",
