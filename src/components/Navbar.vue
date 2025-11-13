@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <nav
-    class="flex items-center justify-between bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-4 md:px-6 py-2.5 shadow-md"
+    class="flex items-center justify-between bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-4 md:px-6 py-3.5 shadow-md"
   >
     <div class="flex items-center space-x-6">
       <!-- ☰ Hamburger -->
