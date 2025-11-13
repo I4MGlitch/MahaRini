@@ -14,16 +14,18 @@
         isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
       ]"
     >
-      <div class="p-3 border-b">
+      <!-- Brand / Logo -->
+      <div class="p-4 border-b">
         <h2 class="text-2xl font-semibold text-blue-600">MAHARINI</h2>
       </div>
 
+      <!-- Menu Items -->
       <ul class="p-4 space-y-2">
         <li v-for="item in menu" :key="item.name">
           <RouterLink
             :to="item.path"
             class="flex items-center p-3 rounded-lg hover:bg-blue-100 text-gray-700 font-medium transition-colors"
-            :class="{ 'bg-blue-50 text-blue-600 font-semibold': $route.path === item.path }"
+            :class="{ 'bg-blue-50 text-blue-600 font-semibold': isActive(item.path) }"
           >
             <span class="material-icons-outlined mr-3 text-blue-600">{{ item.icon }}</span>
             {{ item.name }}
@@ -36,19 +38,36 @@
 
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
+
 defineProps({ isOpen: Boolean })
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const route = useRoute()
 
 const menu = [
   { name: 'Overview', icon: 'dashboard', path: '/' },
-  { name: 'Cashier', icon: 'insights', path: '/cashier' },
-  { name: 'Product', icon: 'settings', path: '/product' }
+  { name: 'Cashier', icon: 'point_of_sale', path: '/cashier' },
+  { name: 'Product', icon: 'inventory', path: '/product' },
+  { name: 'Patient', icon: 'people', path: '/patient' },
+  { name: 'Transactions', icon: 'receipt_long', path: '/transactions' } // New item
 ]
+
+// Check if route is active
+function isActive(path: string) {
+  return route.path === path || route.path.startsWith(path + '/')
+}
 </script>
 
 <style scoped>
 .router-link-active {
   @apply bg-blue-50 text-blue-600 font-semibold;
+}
+
+/* Optional: smooth scroll for sidebar content */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+aside::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
 }
 </style>

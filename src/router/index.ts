@@ -4,6 +4,8 @@ import Analytics from '@/views/Analytics.vue'
 import Setting from '@/views/Setting.vue'
 import ProductPage from '@/views/ProductView.vue'
 import CashierPage from '@/views/CashierView.vue'
+import PatientPage from '@/views/PatientView.vue'
+import TransactionView from '@/views/TransactionView.vue'
 
 const routes = [
   { path: '/', redirect: '/dashboard' },
@@ -12,6 +14,8 @@ const routes = [
   { path: '/settings', name: 'Setting', component: Setting },
   { path: '/product', component: ProductPage },
   { path: '/cashier', component: CashierPage },
+  { path: '/patient', component: PatientPage },
+  { path: '/transactions', component: TransactionView }
 ]
 
 const router = createRouter({

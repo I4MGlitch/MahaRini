@@ -126,7 +126,7 @@ onMounted(() => {
 
       if (!product.id) return
 
-      if (product.stock <= 10 && product.stock > 0 && !notifiedProducts.has(product.id + '-low')) {
+      if (product.stock <= 100 && product.stock > 0 && !notifiedProducts.has(product.id + '-low')) {
         notifications.value.unshift({
           title: 'Stock Alert',
           message: `${product.name} stock is low (${product.stock} left).`,
