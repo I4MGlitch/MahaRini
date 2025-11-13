@@ -25,11 +25,11 @@
       <table class="min-w-full border-collapse mx-auto">
         <thead class="bg-blue-100 text-left">
           <tr>
-            <th class="p-2 font-semibold text-gray-700">Date</th>
-            <th class="p-2 font-semibold text-gray-700">Patient</th>
-            <th class="p-2 font-semibold text-gray-700">Items</th>
+            <th class="p-2 font-semibold text-gray-700">Tanggal</th>
+            <th class="p-2 font-semibold text-gray-700">Pasien</th>
+            <th class="p-2 font-semibold text-gray-700">Obat</th>
             <th class="p-2 font-semibold text-gray-700">Total</th>
-            <th class="p-2 font-semibold text-gray-700">Fees</th>
+            <th class="p-2 font-semibold text-gray-700">Biaya</th>
           </tr>
         </thead>
         <tbody>
@@ -84,7 +84,7 @@
     <!-- Summary by Month and Year -->
     <div class="mt-10 bg-white border rounded-lg shadow p-4">
       <h2 class="text-xl font-bold mb-4 text-blue-700">
-        Monthly & Yearly Summary
+        Hasil Bulanan dan Tahunan
       </h2>
 
       <div class="flex flex-col md:flex-row gap-3 mb-4">
@@ -94,7 +94,7 @@
           </option>
         </select>
         <select v-model="selectedMonth" class="border p-2 rounded w-full md:w-1/4">
-          <option value="">All Months</option>
+          <option value="">Semua Bulan</option>
           <option v-for="(m, i) in months" :key="i" :value="i">{{ m }}</option>
         </select>
       </div>
@@ -102,25 +102,25 @@
       <table class="min-w-full border-collapse">
         <thead class="bg-blue-100 text-left">
           <tr>
-            <th class="p-2 font-semibold text-gray-700">Category</th>
+            <th class="p-2 font-semibold text-gray-700">Kategori</th>
             <th class="p-2 font-semibold text-gray-700">Total (Rp)</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td class="p-2">Administration Fee</td>
+            <td class="p-2">Biaya Administrasi</td>
             <td class="p-2">{{ monthlyTotals.administration.toLocaleString('id-ID') }}</td>
           </tr>
           <tr>
-            <td class="p-2">Medical Fee</td>
+            <td class="p-2">Biaya Medis</td>
             <td class="p-2">{{ monthlyTotals.medical.toLocaleString('id-ID') }}</td>
           </tr>
           <tr>
-            <td class="p-2">Product Fee</td>
+            <td class="p-2">Biaya Obat</td>
             <td class="p-2">{{ monthlyTotals.products.toLocaleString('id-ID') }}</td>
           </tr>
           <tr class="bg-blue-50 font-bold">
-            <td class="p-2">Total Transactions</td>
+            <td class="p-2">Total Transaksi</td>
             <td class="p-2 text-green-700">
               {{ monthlyTotals.total.toLocaleString('id-ID') }}
             </td>
@@ -131,7 +131,7 @@
 
     <!-- Daily Summary -->
     <div class="mt-10 bg-white border rounded-lg shadow p-4">
-      <h2 class="text-xl font-bold mb-4 text-blue-700">Daily Summary</h2>
+      <h2 class="text-xl font-bold mb-4 text-blue-700">Hasil Harian</h2>
 
       <div class="flex flex-col md:flex-row gap-3 mb-4 items-center">
         <input type="date" v-model="dailyStart" class="border p-2 rounded w-full md:w-1/4" />
@@ -147,12 +147,12 @@
       <table class="min-w-full border-collapse">
         <thead class="bg-blue-100 text-left">
           <tr>
-            <th class="p-2 font-semibold text-gray-700">Date</th>
-            <th class="p-2 font-semibold text-gray-700">Total Transactions (Rp)</th>
-            <th class="p-2 font-semibold text-gray-700">Administration Fee</th>
-            <th class="p-2 font-semibold text-gray-700">Medical Fee</th>
-            <th class="p-2 font-semibold text-gray-700">Product Fee</th>
-            <th class="p-2 font-semibold text-gray-700">Number of Transactions</th>
+            <th class="p-2 font-semibold text-gray-700">Tanggal</th>
+            <th class="p-2 font-semibold text-gray-700">Total Transaksi (Rp)</th>
+            <th class="p-2 font-semibold text-gray-700">Biaya Administrasi</th>
+            <th class="p-2 font-semibold text-gray-700">Biaya Medis</th>
+            <th class="p-2 font-semibold text-gray-700">Biaya Obat</th>
+            <th class="p-2 font-semibold text-gray-700">Jumlah Pasien</th>
           </tr>
         </thead>
         <tbody>

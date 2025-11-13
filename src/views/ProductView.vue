@@ -32,7 +32,7 @@
       class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 bg-white shadow p-6 rounded-lg border"
     >
       <div class="flex flex-col">
-        <label class="text-sm font-medium text-gray-700 mb-1">Product Name</label>
+        <label class="text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
         <input
           v-model="newProduct.name"
           placeholder="Enter product name"
@@ -42,7 +42,7 @@
       </div>
 
       <div class="flex flex-col">
-        <label class="text-sm font-medium text-gray-700 mb-1">Price (Rp)</label>
+        <label class="text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
         <input
           v-model.number="newProduct.price"
           placeholder="Enter price"
@@ -67,7 +67,7 @@
         <button
           class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full"
         >
-          Add Product
+          Tambah Produk
         </button>
       </div>
     </form>
@@ -77,8 +77,8 @@
       <table class="w-full border-collapse">
         <thead class="bg-blue-100 text-left">
           <tr>
-            <th class="p-3 font-semibold text-gray-700">Product</th>
-            <th class="p-3 font-semibold text-gray-700">Price</th>
+            <th class="p-3 font-semibold text-gray-700">Produk</th>
+            <th class="p-3 font-semibold text-gray-700">Harga</th>
             <th class="p-3 font-semibold text-gray-700">Stock</th>
             <th class="p-3 font-semibold text-gray-700 text-center">Actions</th>
           </tr>
@@ -157,11 +157,11 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 class="text-xl font-semibold mb-4 text-blue-700">Edit Product</h2>
+        <h2 class="text-xl font-semibold mb-4 text-blue-700">Edit Produk</h2>
 
         <form @submit.prevent="updateProduct" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
             <input
               v-model="editProduct.name"
               type="text"
@@ -171,7 +171,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Price (Rp)</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
             <input
               v-model.number="editProduct.price"
               type="number"
@@ -194,15 +194,15 @@
             <button
               type="button"
               @click="isEditModalOpen = false"
-              class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-gray-400 transition"
             >
-              Cancel
+              Batal
             </button>
             <button
               type="submit"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
             >
-              Update
+              Simpan
             </button>
           </div>
         </form>
@@ -216,23 +216,23 @@
     >
       <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm text-center">
         <span class="material-icons text-red-500 text-5xl mb-3">warning</span>
-        <h3 class="text-xl font-bold text-gray-800 mb-2">Are you sure?</h3>
+        <h3 class="text-xl font-bold text-gray-800 mb-2">Apakah anda yakin?</h3>
         <p class="text-gray-600 mb-6">
-          Do you really want to delete <strong>{{ productToDelete?.name }}</strong>?
-          This action cannot be undone.
+          Apakah benar anda ingin menghapus <strong>{{ productToDelete?.name }}</strong>?
+          Aksi ini tidak bisa di kembalikan.
         </p>
         <div class="flex justify-center gap-4">
           <button
             @click="isDeleteModalOpen = false"
             class="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition"
           >
-            Cancel
+            Batal
           </button>
           <button
             @click="deleteProduct"
             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
           >
-            Delete
+            Hapus
           </button>
         </div>
       </div>
